@@ -1,5 +1,6 @@
 from random import randint
 from operator import attrgetter
+from copy import deepcopy
 
 # simple utility functions ------------------------------------------------------------
 
@@ -25,10 +26,19 @@ def switch_player(turn_of):
     else:
         return 'player_1'
 
+def get_successor_state(state, turn_of, move):
+    state = deepcopy(state)
+    (x,y) = move
+    if turn_of == 'player_1':
+        state[x][y] = 'x'
+    else:
+        state[x][y] = 'o'
+    return state
+
 # utility functions to get player moves ----------------------------------------
 
 # get a player's next move as a tuple of integer values
-def get_move(turn_of, player_type, state):
+def get_move(turn_of, player_type, state, game_node):
     move = None
     # loop until a valid move is selected (i.e. until move is not None)
     while not move:
@@ -38,7 +48,7 @@ def get_move(turn_of, player_type, state):
             if move and not valid_move(move, state):
                 move = None
         else:
-            move = get_random_move(turn_of, state)
+            move = get_optimal_move(game_node)
     return move
 
 # if raw_move_input represents a valid move, then return a parsed representation
@@ -85,8 +95,8 @@ def get_random_move(turn_of, state):
     move_index = randint(0,len(valid_moves)-1)
     return valid_moves[move_index]
 
-# todo
-#def get_optimal_move(turn_of, state)
+def get_optimal_move(game_node):
+    return game_node.optimal_move
 
 # utility functions to check end-game conditions -------------------------------
 
@@ -95,20 +105,35 @@ def get_random_move(turn_of, state):
 #   - there is a row, column, or diagonal containing 3 of only 1 kind of symbol
 #    (i.e. a player has won)
 #   - or, symbols have been placed in all 9 positions (i.e. tie game)
-def terminal_test(state):
-    done = False
+def terminal_test(state, printResult=False):
+
+    is_terminal_state = False
+
     winner = get_winner(state)
-    # if winner is not None, then announce them as a winner and return True
-    if winner:
-        done = True
+
+    if winner or is_full_state(state):
+        is_terminal_state = True
+
+    if is_terminal_state and printResult:
         if winner == 'player_1':
             print '\n' + 'Player 1 is the winner!'
-        else:
+        elif winner == 'player_2':
             print '\n' + 'Player 2 is the winner!'
-    elif is_full_state(state):
-        done = True
-        print '\n' + 'The game was a tie.'
-    return done
+        else:
+            print '\n' + 'The game was a tie.'
+
+    return is_terminal_state
+
+# by convention let player_1 be a maximizer and player_2 be a minimizer
+def utility(state, turn_of):
+    winner = get_winner(state)
+    if winner:
+        if winner == 'player_1':
+            return 1
+        else:
+            return -1
+    else:
+        return 0
 
 # if a player_1 has won the game, return player_1
 # if player_2 has won the game, return player_2
