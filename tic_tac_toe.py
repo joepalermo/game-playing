@@ -2,7 +2,6 @@ from tic_tac_toe_utilities import *
 from GameNode import *
 
 # play tic tac toe
-
 def play():
 
     # initializations for human vs machine game ------------------------------------

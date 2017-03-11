@@ -6,15 +6,14 @@ from copy import deepcopy
 
 # return an empty 3x3 grid, represented by a list of lists with only None values
 def init_state():
-    state = []
-    for _ in range(3):
-        state.append([None, None, None])
-    return state
+    return [[None, None, None],
+            [None, None, None],
+            [None, None, None]]
 
 # pretty-print the state
 def print_state(state):
     print
-    for i in range(0,len(state)):
+    for i in range(0, 3):
         row_string = str(state[i][0]) + ' | ' + str(state[i][1]) + ' | ' + \
                      str(state[i][2])
         print row_string.replace('None', ' ')
@@ -26,6 +25,8 @@ def switch_player(turn_of):
     else:
         return 'player_1'
 
+# given the current state, whose turn it is, and the move taken from the current
+# state, return the resulting state
 def get_successor_state(state, turn_of, move):
     state = deepcopy(state)
     (x,y) = move
@@ -95,25 +96,23 @@ def get_random_move(turn_of, state):
     move_index = randint(0,len(valid_moves)-1)
     return valid_moves[move_index]
 
+# get the optimal move from the current position, as determined by the current
+# node of the pre-computed game tree
 def get_optimal_move(game_node):
     return game_node.optimal_move
 
 # utility functions to check end-game conditions -------------------------------
 
 # check if any game-ending conditions are satisfied
-# game can end if:
+# the game ends if:
 #   - there is a row, column, or diagonal containing 3 of only 1 kind of symbol
 #    (i.e. a player has won)
 #   - or, symbols have been placed in all 9 positions (i.e. tie game)
 def terminal_test(state, printResult=False):
-
     is_terminal_state = False
-
     winner = get_winner(state)
-
     if winner or is_full_state(state):
         is_terminal_state = True
-
     if is_terminal_state and printResult:
         if winner == 'player_1':
             print '\n' + 'Player 1 is the winner!'
@@ -121,9 +120,9 @@ def terminal_test(state, printResult=False):
             print '\n' + 'Player 2 is the winner!'
         else:
             print '\n' + 'The game was a tie.'
-
     return is_terminal_state
 
+# get the utility of the current state, for the current player
 # by convention let player_1 be a maximizer and player_2 be a minimizer
 def utility(state, turn_of):
     winner = get_winner(state)
@@ -167,13 +166,13 @@ def get_winner(state):
 def check_squares_for_win(x, y, z):
     # make sure at least one value isn't None, and that all values are equal
     if x and x == y and y == z:
-            return True
+        return True
     return False
 
 # check if the state is full with symbols
 def is_full_state(state):
     for row in state:
         for square in row:
-            if square == None:
+            if not square:
                 return False
     return True
