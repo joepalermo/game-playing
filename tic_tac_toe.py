@@ -9,13 +9,13 @@ def play():
     player_type = {'player_1': 'human', 'player_2': 'ai'}
 
     # build the game tree
+    print "constructing the game tree..."
     root_node = GameNode(init_state(), 'player_1', None)
     root_node.generate_game_tree()
-    game_node = root_node
+    print "100% done building the game tree!"
 
+    # meta-game loop -----------------------------------------------------------
     done = False
-
-    # meta-game loop ----------------------------------------------------------
     while not done:
         user_input = raw_input("\nDo you want to play tic-tac-toe? " + \
                                "(type y or n) ")

@@ -2,7 +2,10 @@ from random import randint
 from operator import attrgetter
 from copy import deepcopy
 
-# simple utility functions ------------------------------------------------------------
+# the number of leaf nodes in the game tree for tic-tac-toe
+final_num_leaf_nodes = 255168
+
+# miscellaneous utility functions -----------------------------------------------------
 
 # return an empty 3x3 grid, represented by a list of lists with only None values
 def init_state():
@@ -35,6 +38,9 @@ def get_successor_state(state, turn_of, move):
     else:
         state[x][y] = 'o'
     return state
+
+def get_percentage_completion(leaf_count):
+    return float(leaf_count) / final_num_leaf_nodes * 100
 
 # utility functions to get player moves ----------------------------------------
 
