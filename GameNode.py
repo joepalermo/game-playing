@@ -1,15 +1,9 @@
 from tic_tac_toe_utilities import *
 
-terminal_count = 0
+# count the number of leaf nodes found while constructing the game tree, so as
+# to update the user on progress
+leaf_count = 0
 
-# Use a minimax game tree to derive the optimal move
-# GameNode properties:
-# -move_from_parent
-# -state
-# -turn_of
-# -utility
-# -successors
-# -optimal_move
 class GameNode:
 
     def __init__(self, state, turn_of, move_from_parent):
@@ -26,17 +20,17 @@ class GameNode:
         print "\n move from parent: " + str(self.move_from_parent)
         print "\n utility:" + str(self.utility)
         print "\n optimal_move:" + str(self.optimal_move)
-        #print "\n successors:" + self.successors
 
     # generate the rest of the game tree by depth-first search
     def generate_game_tree(self):
         if terminal_test(self.state):
             self.utility = utility(self.state, self.turn_of)
             # keep track of progress building the game tree by counting leaves
-            global terminal_count
-            terminal_count += 1
-            if terminal_count % 10000 == 0:
-                print terminal_count
+            global leaf_count
+            leaf_count += 1
+            if leaf_count % 10000 == 0:
+                percentage_completion = get_percentage_completion(leaf_count)
+                print "{0:.0f}%".format(percentage_completion) + " done"
             return
         else:
             self.successors = self.generate_successors()
@@ -66,4 +60,3 @@ class GameNode:
             if node.move_from_parent == move:
                 return node
         raise Exception("move doesn't lead to a successor state, or game tree is corrupted")
-        
