@@ -25,6 +25,26 @@ def switch_player(turn_of):
     else:
         return 'player_1'
 
+# return True if at least one human is set to play
+def is_human_playing(player_type):
+    return 'human' in player_type.values()
+
+# update the game play record based on the final state of a game
+def update_record(final_state, record):
+    winner = get_winner(final_state)
+    if winner == 'player_1':
+        record[0] += 1
+    elif winner == 'player_2':
+        record[1] += 1
+    else:
+        record[2] += 1
+
+def print_record(record):
+    print
+    print "player 1 won " + str(record[0]) + " games"
+    print "player 2 won " + str(record[1]) + " games"
+    print str(record[2]) + " games were tied"
+
 # given the current state, whose turn it is, and the move taken from the current
 # state, return the resulting state
 def get_successor_state(state, turn_of, move):
