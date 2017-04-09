@@ -5,7 +5,7 @@ def play():
 
     # initializations for human vs machine game --------------------------------
     player_symbols = {'player_1': 'x', 'player_2': 'o'}
-    player_type = {'player_1': 'human', 'player_2': 'ai'}
+    player_type = {'player_1': 'random_ai', 'player_2': 'optimal_ai'}
 
     # meta-game loop -----------------------------------------------------------
     done = False

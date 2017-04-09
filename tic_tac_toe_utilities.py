@@ -124,7 +124,9 @@ def get_move(turn_of, player_type, state):
             move = parse_raw_move_input(raw_move_input)
             if move and not valid_move(move, state):
                 move = None
-    else:
+    elif player_type[turn_of] == 'random_ai':
+        move = get_random_move(state)
+    elif player_type[turn_of] == 'optimal_ai':
         move = get_optimal_move(state, turn_of)
     return move
 
@@ -167,14 +169,14 @@ def get_valid_moves(state):
     return [(x,y) for (x,y) in all_positions if not state[x][y]]
 
 # get a random valid move
-def get_random_move(turn_of, state):
+def get_random_move(state):
     valid_moves = get_valid_moves(state)
     move_index = randint(0,len(valid_moves)-1)
     return valid_moves[move_index]
 
 # generate the rest of the game tree from the current state
-def get_optimal_move(turn_of, state):
-    game_node = GameNode(turn_of, state)
+def get_optimal_move(state, turn_of):
+    game_node = GameNode(state, turn_of)
     game_node.generate_game_tree()
     return game_node.optimal_move
 
